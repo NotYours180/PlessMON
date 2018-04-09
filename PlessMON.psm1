@@ -194,3 +194,16 @@ function Get-SystemReport_PM
     write-host "Your System-info report has been built and is located at $Fil_SysInfoReportHTML"
 }
 #---------------------------------------------------------------------------------------------------------------------------------------------
+#Description: Get Logons (win event 4624 starting at 0001 this morning)
+#Version: 1
+#Permissions: 
+function Get-Logon_PM
+{
+    Initialize-PlessMON_PM
+    $lst_log_index = get-content -path "$Fil_WIN_SEC_Log_PM"
+    $event = Get-Eventlog -LogName Security -InstanceId 4624 -After $Today
+    foreach($e in $event)
+        {if ( $lst_log_index -contains $e.index){} else{$e | Format-Table -wrap >> $Fil_WIN_SEC_Log_PM}}
+    Write-host "All win event logs '4624' starting from 0001 this morning have been written to '$Fil_WIN_SEC_Log_PM'"
+}
+#---------------------------------------------------------------------------------------------------------------------------------------------
