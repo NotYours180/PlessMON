@@ -21,16 +21,16 @@ function Install-PlessMON_PMA
     Else{new-item -ItemType file -Path c:\PlessMON_Agent\Reports\Installed.txt;$date = get-date; echo "PlessMON was installed on $date." >> "c:\PlessMON_Agent\Reports\Installed.txt" }
 
     #Build "c:\PlessMON_Agent\Reports\RM102-04-SysInfo-Template.csv"
-    Add-Content -Path c:\PlessMON_Agent\Reports\SysInfo-Template.csv  -Value '"Null"'
+    Add-Content -Path "c:\PlessMON_Agent\Reports\SysInfo-Template.csv"  -Value '"Null"'
     $sysinfo_csv = @(
       '"Null"' )
-    $sysinfo_csv | foreach { Add-Content -Path  c:\PlessMON_Agent\Reports\SysInfo-Template.csv -Value $_ }
+    $sysinfo_csv | foreach { Add-Content -Path  "c:\PlessMON_Agent\Reports\SysInfo-Template.csv" -Value $_ }
     #Build "c:\PlessMON_Agent\Temp"
-    If(test-path "c:\PlessMON\Temp"){}
-    Else{new-item -ItemType directory -Path c:\PlessMON_Agent\Temp}
+    If(test-path "c:\PlessMON_Agent\Temp"){}
+    Else{new-item -ItemType directory -Path "c:\PlessMON_Agent\Temp"}
     #Build "c:\PlessMON_Agent\Log"
-    If(test-path "c:\PlessMON\Log"){}
-    Else{new-item -ItemType directory -Path c:\PlessMON_Agent\Log}
+    If(test-path "c:\PlessMON_Agent\Log"){}
+    Else{new-item -ItemType directory -Path "c:\PlessMON_Agent\Log"}
 }
 #---------------------------------------------------------------------------------------------------------------------------------------------
 #Description: Setup Variables for PlessMON Module and functions
