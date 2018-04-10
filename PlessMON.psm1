@@ -68,7 +68,7 @@ function Initialize-PlessMON_PM
 #---------------------------------------------------------------------------------------------------------------------------------------------
 #Description: Push the information from the sysinfo function into a csv to be read and compared later
 #Version: 2; 8APR18
-#Permissions: 
+#Permissions: Administrator
 function Push-CSV_PM
 {
 Initialize-PlessMON_PM
@@ -85,7 +85,7 @@ $arr | Export-Csv $FIL_SysInfo -NoTypeInformation
 #----------------------------------------------------------------------------------------------------------------------------------------------
 #Description: Get System information
 #Version: 4; 8APR18
-#Permissions: 
+#Permissions: Adminstrator
 function Get-SystemInfo_PM
 {
     Initialize-PlessMON_PM
@@ -162,7 +162,7 @@ Else
 #---------------------------------------------------------------------------------------------------------------------------------------------
 #Description: Get System information and build report
 #Version: 4; Added 8APR18
-#Permissions: 
+#Permissions: Administrator
 function Get-SystemReport_PM
 {
     Initialize-PlessMON_PM   
@@ -196,7 +196,7 @@ function Get-SystemReport_PM
 #---------------------------------------------------------------------------------------------------------------------------------------------
 #Description: Get Logons (win event 4624 starting at 0001 this morning)
 #Version: 1
-#Permissions: 
+#Permissions: Administrator
 function Get-Logon_PM
 {
     Initialize-PlessMON_PM
