@@ -5,7 +5,7 @@
 #---------------------------------------------------------------------------------------------------------------------------------------------
 #Description: Install directories and build files to make PlessMON work
 #Version: 1; 8APR18
-#Permissions:
+#Permissions: User
 function Install-PlessMON_PM
 {
     #Build "c:\PlessMON"
@@ -39,7 +39,7 @@ function Install-PlessMON_PM
 #---------------------------------------------------------------------------------------------------------------------------------------------
 #Description: Setup Variables for PlessMON Module and functions
 #Version: 4; 8APR18
-#Permissions:User
+#Permissions: User
 function Initialize-PlessMON_PM
 {
     $install_test = test-path c:\PlessMON\Reports\installed.txt
@@ -85,7 +85,7 @@ $arr | Export-Csv $FIL_SysInfo -NoTypeInformation
 #----------------------------------------------------------------------------------------------------------------------------------------------
 #Description: Get System information
 #Version: 4; 8APR18
-#Permissions: Adminstrator
+#Permissions: Administrator
 function Get-SystemInfo_PM
 {
     Initialize-PlessMON_PM
