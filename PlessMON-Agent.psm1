@@ -120,15 +120,9 @@ function Get-HardwareInfo_PMA
     Push-CSV_PM
     write-host "$title information has been added to $FIL_SysInfo"
 
-    $PhysicalDrive = wmic diskdrive get interfacetype,mediatype,model
+    $PhysicalDrive = get-physicaldisk | select FriendlyName,SerialNumber,MediaType,Size
     $subject = $PhysicalDrive
     $title = "Disk"
-    Push-CSV_PM
-    write-host "$title information has been added to $FIL_SysInfo"
-
-    $PhysicalDriveSN = get-wmiobject win32_physicalmedia | select serialnumber
-    $subject = $PhysicalDriveSN
-    $title = "Disk-SN"
     Push-CSV_PM
     write-host "$title information has been added to $FIL_SysInfo"
 
@@ -194,7 +188,7 @@ Else
 #---------------------------------------------------------------------------------------------------------------------------------------------
 #Description: Get System information and build report
 #Version: 4; Added 8APR18
-#Permissions: Administrator
+#Permissions: User
 function Get-SystemReport_PMA
 {
     Initialize-PlessMON_PMA   
@@ -211,8 +205,7 @@ function Get-SystemReport_PMA
     $Processor = get-wmiobject win32_Processor | select Name,Caption,DeviceID,NumberOfCores,NumberOfEnabledCore,NumberOfLogicalProcessors,ThreadCount,L2CacheSize,L3CacheSize,ProcessorId,VirtualizationFirmwareEnabled,SocketDesignation,Revision,Manufacturer | convertto-html -Body "<h2>Processor</h2>"
     $Memory = get-wmiobject win32_physicalmemory | select PSComputerName,BankLabel,Capacity,Caption,ConfiguredClockSpeed,DeviceLocator,FormFactor | convertto-html -Body "<h2>Memory</h2>"
     $Memory_SN = get-wmiobject -class win32_physicalmemory | select manufacturer,serialnumber | convertto-html -Body "<h2>RAM Chip Serial Numbers</h2>"
-    $PhysicalDrive = wmic diskdrive get interfacetype,mediatype,model | convertto-html -Body "<h2>Physical Drive Info</h2>"
-    $PhysicalDriveSN = get-wmiobject win32_physicalmedia | select serialnumber | convertto-html -Body "<h2>Physical Drive Serial Number</h2>"
+    $PhysicalDrive = get-physicaldisk | select FriendlyName,SerialNumber,MediaType,Size | convertto-html -Body "<h2>Physical Drive Info</h2>"
     $Users = get-ciminstance win32_useraccount | sort status | format-table -property name,description,disabled,accounttype,pscomputername
     Add-Content $HTMLBaseline $OperatingSystem2
     Add-Content $HTMLBaseline $BIOS
