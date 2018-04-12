@@ -6,5 +6,6 @@ Security-Framework which emphasizes the 20 Critical Security Controls.
 ### 3. Type "R" when it asks you whether you trust the publisher of the module.
 ### 4. Show possible commands by typing "get-command -module PlessMON-Agent.psm1"
 # To build a system/host baseline report type "Get-Reports_PMA"
-### It will create the html report in the "C:\PlessMON_Agent\Reports" directory with a naming convention of Baseline_ $Hostname-Hardware-$Date2.html,  $Hostname-Software-Baseline.html, etc.
+### It will create the html report in the "C:\PlessMON_Agent\Reports" directory with a naming convention of:
+### Baseline_ Hostname-Hardware-Date.html,  Hostname-Software-Baseline.html, etc.
 ### Finally, open the previously built report in your favorite web browser.
