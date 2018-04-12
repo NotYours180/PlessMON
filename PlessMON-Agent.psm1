@@ -266,7 +266,7 @@ function Get-ConnReport_PMA
 #Description: Build Hardware,Software,Service,Process and Connection reports
 #Version: 1; Added 12APR18
 #Permissions: Administrator
-function Build-Reports_PMA
+function Get-Reports_PMA
 {
     Get-HardReport_PMA
     Get-SoftReport_PMA
