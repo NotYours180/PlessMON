@@ -38,13 +38,14 @@ function Install-PlessMON_PMA
 #Permissions: User
 function Initialize-PlessMON_PMA
 {
+    $psversion = $PSVersionTable.PSVersion.Major
     $install_test = test-path c:\PlessMON_Agent\Reports\installed.txt
     If($install_test -eq $false){Install-PlessMON_PMA}
     $Global:Hostname = hostname
     $Global:Date = get-date -format hhmm-ddMMMyy
     $Global:Today = get-date -format d
     $Global:Date2 = get-date -format ddMMMyy
-    $Timezone = get-timezone
+    If($psversion = 5){$Timezone = get-timezone} Else{$Timezone = [System.TimeZone]::CurrentTimeZone}
     $Global:Titles = @($subject.PSObject.Properties.Name)
     $Global:DIR_Root = "c:\PlessMON_Agent"
     $Global:DIR_Scripts = "$DIR_Root\Scripts"
@@ -71,7 +72,7 @@ function Initialize-PlessMON_PMA
 #---------------------------------------------------------------------------------------------------------------------------------------------
 #Description: Push the information from the sysinfo function into a csv to be read and compared later
 #Version: 2; 8APR18
-#Permissions: Administrator
+#Permissions: User
 function Push-CSV_PM
 {
 Initialize-PlessMON_PMA
@@ -88,7 +89,7 @@ $arr | Export-Csv $FIL_SysInfo -NoTypeInformation
 #---------------------------------------------------------------------------------------------------------------------------------------------
 #Description: Get System Hardware related information and build report
 #Version: 1; Added 12APR18
-#Permissions: Administrator
+#Permissions: User
 function Get-HardReport_PMA
 {
     Initialize-PlessMON_PMA
@@ -239,25 +240,40 @@ function Get-SoftReport_PMA
     write-host "Your System-Software-Report has been built and is located at $HTML_Report"
 }
 #---------------------------------------------------------------------------------------------------------------------------------------------
+#Description: Get System service information and build report
+#Version: 1; Added 12APR18
+#Permissions: ?
+function Get-ServReport_PMA
+{
+$Header = @"
+<style>
+TABLE {border-width: 3px; border-style: solid; border-color: black; border-collapse: collapse;}
+TD {border-width: 1px; padding: 3px; border-style: solid; border-color: black;}
+</style>
+"@
+$test3 = Get-Service | Select Name, DisplayName, Status, @{L='RequiredServices';E={$_.RequiredServices  -join '; '}}, @{L='DependentServices';E={$_.DependentServices  -join '; '}} | ConvertTo-Html -Body "<h2>Services</h2>" -Head $Header
+    Add-Content C:\PlessMON_Agent\Reports\test.html $test3
+}
+#---------------------------------------------------------------------------------------------------------------------------------------------
 #Description: Get System Process information and build report
-#Version: 4; Added 8APR18
-#Permissions: User
+#Version: 1; Added 12APR18
+#Permissions: ?
 function Get-ProcReport_PMA
 {
     Write-host "This funtion is currently under construction."
 }
 #---------------------------------------------------------------------------------------------------------------------------------------------
 #Description: Get System service information and build report
-#Version: 4; Added 8APR18
-#Permissions: User
+#Version: 1; Added 12APR18
+#Permissions: ?
 function Get-ServReport_PMA
 {
     Write-host "This funtion is currently under construction."
 }
 #---------------------------------------------------------------------------------------------------------------------------------------------
 #Description: Get System network connection information and build report
-#Version: 4; Added 8APR18
-#Permissions: User
+#Version: 1; Added 12APR18
+#Permissions: ?
 function Get-ConnReport_PMA
 {
     Write-host "This funtion is currently under construction."
@@ -265,7 +281,7 @@ function Get-ConnReport_PMA
 #----------------------------------------------------------------------------------------------------------------------------------------------
 #Description: Build Hardware,Software,Service,Process and Connection reports
 #Version: 1; Added 12APR18
-#Permissions: Administrator
+#Permissions: User
 function Get-Reports_PMA
 {
     Get-HardReport_PMA
