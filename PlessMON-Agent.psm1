@@ -45,7 +45,7 @@ function Initialize-PlessMON_PMA
     $Global:Date = get-date -format hhmm-ddMMMyy
     $Global:Today = get-date -format d
     $Global:Date2 = get-date -format ddMMMyy
-    If($psversion = 5){$Timezone = get-timezone} Else{$Timezone = [System.TimeZone]::CurrentTimeZone}
+    If($psversion = 5){$Timezone = (get-timezone).id} Else{$Timezone = ([System.TimeZone]::CurrentTimeZone).StandardName}
     $Global:Titles = @($subject.PSObject.Properties.Name)
     $Global:DIR_Root = "c:\PlessMON_Agent"
     $Global:DIR_Scripts = "$DIR_Root\Scripts"
