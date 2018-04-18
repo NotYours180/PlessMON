@@ -61,6 +61,8 @@ function Initialize-PlessMON_PMA
     $Global:Fil_HardReport = "$Global:Dir_Reports\$Hostname-Hardware-$Date2.html"
     $Global:Fil_Base_SoftReport = "$Global:Dir_Reports\$Hostname-Software-Baseline.html"
     $Global:Fil_SoftReport = "$Global:Dir_Reports\$Hostname-Software-$Date2.html"
+    $Global:Fil_Base_ServReport = "$Global:Dir_Reports\$Hostname-Service-Baseline.html"
+    $Global:Fil_ServReport = "$Global:Dir_Reports\$Hostname-Service-$Date2.html"
     If(test-path "$Dir_Log\WIN_Security_Log_PM.txt")
     {} 
     Else 
@@ -245,28 +247,37 @@ function Get-SoftReport_PMA
 #Permissions: ?
 function Get-ServReport_PMA
 {
+    Initialize-PlessMON_PMA
+    $ReportTitle = "$Hostname System-Service-Report"
+    If(test-path "$Fil_Base_ServReport")
+        {
+            $HTML_Report = $FIL_ServReport
+            $when = "Updated on:"
+            If(test-path $Fil_ServReport)
+            {
+                Remove-Item $Fil_ServReport
+            }
+        }
+    Else
+        {
+            $HTML_Report = $Fil_Base_ServReport
+            $when = "Created on:"
+        }
+
 $Header = @"
 <style>
 TABLE {border-width: 3px; border-style: solid; border-color: black; border-collapse: collapse;}
 TD {border-width: 1px; padding: 3px; border-style: solid; border-color: black;}
 </style>
 "@
-$test3 = Get-Service | Select Name, DisplayName, Status, @{L='RequiredServices';E={$_.RequiredServices  -join '; '}}, @{L='DependentServices';E={$_.DependentServices  -join '; '}} | ConvertTo-Html -Body "<h2>Services</h2>" -Head $Header
-    Add-Content C:\PlessMON_Agent\Reports\test.html $test3
+$Services = Get-Service | Select Name, DisplayName, Status, @{L='RequiredServices';E={$_.RequiredServices  -join '; '}}, @{L='DependentServices';E={$_.DependentServices  -join '; '}} | ConvertTo-Html -Title $ReportTitle -Body "<h1>$ReportTitle</h1>`n<h5>$when $(Date) $Timezone </h5>`n<h2>Services</h2>" -Head $Header
+    Add-Content $HTML_Report $Services
 }
 #---------------------------------------------------------------------------------------------------------------------------------------------
 #Description: Get System Process information and build report
 #Version: 1; Added 12APR18
 #Permissions: ?
 function Get-ProcReport_PMA
-{
-    Write-host "This funtion is currently under construction."
-}
-#---------------------------------------------------------------------------------------------------------------------------------------------
-#Description: Get System service information and build report
-#Version: 1; Added 12APR18
-#Permissions: ?
-function Get-ServReport_PMA
 {
     Write-host "This funtion is currently under construction."
 }
@@ -286,5 +297,6 @@ function Get-Reports_PMA
 {
     Get-HardReport_PMA
     Get-SoftReport_PMA
+    Get-ServReport_PMA
 }
 #---------------------------------------------------------------------------------------------------------------------------------------------
