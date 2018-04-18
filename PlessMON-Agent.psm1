@@ -63,6 +63,8 @@ function Initialize-PlessMON_PMA
     $Global:Fil_SoftReport = "$Global:Dir_Reports\$Hostname-Software-$Date2.html"
     $Global:Fil_Base_ServReport = "$Global:Dir_Reports\$Hostname-Service-Baseline.html"
     $Global:Fil_ServReport = "$Global:Dir_Reports\$Hostname-Service-$Date2.html"
+    $Global:Fil_Base_ProcReport = "$Global:Dir_Reports\$Hostname-Process-Baseline.html"
+    $Global:Fil_ProcReport = "$Global:Dir_Reports\$Hostname-Process-$Date2.html"
     If(test-path "$Dir_Log\WIN_Security_Log_PM.txt")
     {} 
     Else 
@@ -272,6 +274,7 @@ TD {border-width: 1px; padding: 3px; border-style: solid; border-color: black;}
 "@
 $Services = Get-Service | Select Name, DisplayName, Status, @{L='RequiredServices';E={$_.RequiredServices  -join '; '}}, @{L='DependentServices';E={$_.DependentServices  -join '; '}} | ConvertTo-Html -Title $ReportTitle -Body "<h1>$ReportTitle</h1>`n<h5>$when $(Date) $Timezone </h5>`n<h2>Services</h2>" -Head $Header
     Add-Content $HTML_Report $Services
+write-host "Your System-Service-Report has been built and is located at $HTML_Report"
 }
 #---------------------------------------------------------------------------------------------------------------------------------------------
 #Description: Get System Process information and build report
@@ -279,7 +282,32 @@ $Services = Get-Service | Select Name, DisplayName, Status, @{L='RequiredService
 #Permissions: ?
 function Get-ProcReport_PMA
 {
-    Write-host "This funtion is currently under construction."
+    Initialize-PlessMON_PMA
+    $ReportTitle = "$Hostname System-Process-Report"
+    If(test-path "$Fil_Base_ProcReport")
+        {
+            $HTML_Report = $FIL_ProcReport
+            $when = "Updated on:"
+            If(test-path $Fil_ProcReport)
+            {
+                Remove-Item $Fil_ProcReport
+            }
+        }
+    Else
+        {
+            $HTML_Report = $Fil_Base_ProcReport
+            $when = "Created on:"
+        }
+
+$Header = @"
+<style>
+TABLE {border-width: 3px; border-style: solid; border-color: black; border-collapse: collapse;}
+TD {border-width: 1px; padding: 3px; border-style: solid; border-color: black;}
+</style>
+"@
+$Processes = get-process | ConvertTo-Html -Title $ReportTitle -Body "<h1>$ReportTitle</h1>`n<h5>$when $(Date) $Timezone </h5>`n<h2>Processes</h2>" -Head $Header
+    Add-Content $HTML_Report $Processes
+write-host "Your System-Process-Report has been built and is located at $HTML_Report"
 }
 #---------------------------------------------------------------------------------------------------------------------------------------------
 #Description: Get System network connection information and build report
@@ -298,5 +326,6 @@ function Get-Reports_PMA
     Get-HardReport_PMA
     Get-SoftReport_PMA
     Get-ServReport_PMA
+    Get-ProcReport_PMA
 }
 #---------------------------------------------------------------------------------------------------------------------------------------------
