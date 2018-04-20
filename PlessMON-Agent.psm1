@@ -57,6 +57,10 @@ function Initialize-PlessMON_PMA
     $Global:FIL_Hardware_New = "$Dir_Reports\$Hostname-Hardware-$Date2.csv"
     $Global:FIL_Software_Baseline = "$Dir_Reports\$Hostname-Software-Baseline.csv"
     $Global:FIL_Software_New = "$Dir_Reports\$Hostname-Software-$Date2.csv"
+    $Global:FIL_Process_Baseline = "$Dir_Reports\$Hostname-Process-Baseline.csv"
+    $Global:FIL_Process_New = "$Dir_Reports\$Hostname-Process-$Date2.csv"
+    $Global:FIL_Service_Baseline = "$Dir_Reports\$Hostname-Service-Baseline.csv"
+    $Global:FIL_Service_New = "$Dir_Reports\$Hostname-Service-$Date2.csv"
     $Global:Fil_Base_HardReport = "$Global:Dir_Reports\$Hostname-Hardware-Baseline.html"
     $Global:Fil_HardReport = "$Global:Dir_Reports\$Hostname-Hardware-$Date2.html"
     $Global:Fil_Base_SoftReport = "$Global:Dir_Reports\$Hostname-Software-Baseline.html"
@@ -250,6 +254,30 @@ function Get-SoftReport_PMA
 function Get-ServReport_PMA
 {
     Initialize-PlessMON_PMA
+    #--------------------------------------------
+    #Build csv file to collect on PlessMON-Server for data analytics
+    If (Test-Path $FIL_Service_New)
+    {
+        $Global:arr = Import-CSV $FIL_Service_New; $Global:FIL_SysInfo = $FIL_Service_New
+    }
+    Else
+    {
+        If(test-path $FIL_Service_Baseline)
+        {
+            $Global:arr = Import-CSV $FIL_SysInfo_Template; $Global:FIL_SysInfo = $FIL_Service_New
+        }
+        Else
+        {
+            $Global:arr = Import-CSV $FIL_SysInfo_Template; $Global:FIL_SysInfo = $FIL_Service_Baseline
+        }
+    }
+    #bios information
+    $Services = Get-Service | Select Name, DisplayName, Status
+    $subject = $Services
+    $title = "Services"
+    Push-CSV_PM
+    #--------------------------------------------
+    #Build html report for hardware information
     $ReportTitle = "$Hostname System-Service-Report"
     If(test-path "$Fil_Base_ServReport")
         {
