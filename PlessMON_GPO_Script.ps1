@@ -1,29 +1,31 @@
-﻿import-module \\192.168.5.230\Pless_Data\490_Tech_Projects\440_Scripts\Pless_MON\PlessMON-Agent.psm1
+﻿$FOL_share = read-host -Prompt "what is the path to the folder? ie: \\192.168.1.1\share\folder"
+import-module $FOL_share\PlessMON-Agent.psm1
 Get-Reports_PMA
 $hostname = hostname
 $rep = Get-childitem -path "C:\PlessMON_Agent\Reports"
-If(test-path "\\192.168.5.230\Pless_Data\490_Tech_Projects\440_Scripts\Pless_MON\$hostname")
+$FOL_share = read-host -Prompt "what is the path to the folder? ie: \\192.168.1.1\share\folder"
+If(test-path $FOL_share\$hostname)
 {
     foreach($file in $rep.Name)
         {
-            If(test-path "\\192.168.5.230\Pless_Data\490_Tech_Projects\440_Scripts\Pless_MON\$hostname\$file")
+            If(test-path $FOL_share\$hostname\$file)
             {}
             Else
             {
-                Copy-Item -Path C:\PlessMON_Agent\Reports\$file -Destination \\192.168.5.230\Pless_Data\490_Tech_Projects\440_Scripts\Pless_MON\$hostname\$file
+                Copy-Item -Path C:\PlessMON_Agent\Reports\$file -Destination $FOL_share\$hostname\$file
             }
         }
 }
 Else
 {
-    New-Item -ItemType Directory \\192.168.5.230\Pless_Data\490_Tech_Projects\440_Scripts\Pless_MON\$hostname
+    New-Item -ItemType Directory $FOL_share\$hostname
     foreach($file in $rep.Name)
     {
-        If(test-path "\\192.168.5.230\Pless_Data\490_Tech_Projects\440_Scripts\Pless_MON\$hostname\$file")
+        If(test-path $FOL_share\$hostname\$file)
         {}
         Else
         {
-            Copy-Item -Path C:\PlessMON_Agent\Reports\$file -Destination \\192.168.5.230\Pless_Data\490_Tech_Projects\440_Scripts\Pless_MON\$hostname\$file
+            Copy-Item -Path C:\PlessMON_Agent\Reports\$file -Destination $FOL_share\$hostname\$file
         }
     }
 }
